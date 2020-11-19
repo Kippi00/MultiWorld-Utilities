@@ -278,8 +278,7 @@ def roll_settings(weights):
 
     ret.mapshuffle = get_choice('map_shuffle', weights, 'm' in dungeon_items)
     ret.compassshuffle = get_choice('compass_shuffle', weights, 'c' in dungeon_items)
-    ret.keyshuffle = get_choice('smallkey_shuffle', weights,
-                                'universal' if 'u' in dungeon_items else 's' in dungeon_items)
+    ret.keyshuffle = get_choice('smallkey_shuffle', weights, 's' in dungeon_items)
     ret.bigkeyshuffle = get_choice('bigkey_shuffle', weights, 'b' in dungeon_items)
 
     ret.accessibility = get_choice('accessibility', weights)
@@ -310,13 +309,10 @@ def roll_settings(weights):
     ret.triforce_pieces_required = get_choice('triforce_pieces_required', weights, 20)
     ret.triforce_pieces_required = min(max(1, int(ret.triforce_pieces_required)), 90)
 
-    ret.mode = get_choice('world_state', weights, None)  # legacy support
+    ret.mode = get_choice('world_state', weights)
     if ret.mode == 'retro':
         ret.mode = 'open'
         ret.retro = True
-    elif ret.mode is None:
-        ret.mode = get_choice("mode", weights)
-        ret.retro = get_choice("retro", weights)
 
     ret.hints = get_choice('hints', weights)
 
@@ -333,40 +329,17 @@ def roll_settings(weights):
     ret.shufflebosses = {'none': 'none',
                          'simple': 'basic',
                          'full': 'normal',
-                         'random': 'random',
+                         'random': 'chaos',
                          'singularity': 'singularity',
                          'duality': 'singularity'
                          }[get_choice('boss_shuffle', weights)]
 
-    ret.enemy_shuffle = {'none': False,
-                         'shuffled': 'shuffled',
-                         'random': 'chaos',
-                         'chaosthieves': 'chaosthieves',
-                         'chaos': 'chaos',
-                         True: True,
-                         False: False,
-                         None: False
-                         }[get_choice('enemy_shuffle', weights, False)]
-
-    ret.killable_thieves = get_choice('killable_thieves', weights, False)
-    ret.tile_shuffle = get_choice('tile_shuffle', weights, False)
-    ret.bush_shuffle = get_choice('bush_shuffle', weights, False)
-
-    # legacy support for enemy shuffle
-    if type(ret.enemy_shuffle) == str:
-        if ret.enemy_shuffle == 'shuffled':
-            ret.killable_thieves = True
-        elif ret.enemy_shuffle == 'chaos':
-            ret.killable_thieves = True
-            ret.bush_shuffle = True
-            ret.tile_shuffle = True
-        elif ret.enemy_shuffle == "chaosthieves":
-            ret.killable_thieves = bool(random.randint(0, 1))
-            ret.bush_shuffle = True
-            ret.tile_shuffle = True
-        ret.enemy_shuffle = True
-
-    # end of legacy block
+    ret.shuffleenemies = {'none': 'none',
+                          'shuffled': 'shuffled',
+                          'random': 'chaos',
+                          'chaosthieves': 'chaosthieves',
+                          'chaos': 'chaos'
+                          }[get_choice('enemy_shuffle', weights)]
 
     ret.enemy_damage = {'default': 'default',
                         'shuffled': 'shuffled',

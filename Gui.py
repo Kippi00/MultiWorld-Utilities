@@ -67,42 +67,27 @@ def guiMain(args=None):
     openpyramidCheckbutton = Checkbutton(checkBoxFrame, text="Pre-open Pyramid Hole", variable=openpyramidVar)
     mcsbshuffleFrame = Frame(checkBoxFrame)
     mcsbLabel = Label(mcsbshuffleFrame, text="Shuffle: ")
-
     mapshuffleVar = IntVar()
     mapshuffleCheckbutton = Checkbutton(mcsbshuffleFrame, text="Maps", variable=mapshuffleVar)
-
     compassshuffleVar = IntVar()
     compassshuffleCheckbutton = Checkbutton(mcsbshuffleFrame, text="Compasses", variable=compassshuffleVar)
-
+    keyshuffleVar = IntVar()
+    keyshuffleCheckbutton = Checkbutton(mcsbshuffleFrame, text="Keys", variable=keyshuffleVar)
     bigkeyshuffleVar = IntVar()
     bigkeyshuffleCheckbutton = Checkbutton(mcsbshuffleFrame, text="BigKeys", variable=bigkeyshuffleVar)
-
-    keyshuffleFrame = Frame(checkBoxFrame)
-    keyshuffleVar = StringVar()
-    keyshuffleVar.set('off')
-    modeOptionMenu = OptionMenu(keyshuffleFrame, keyshuffleVar, 'off', 'universal', 'on')
-    modeOptionMenu.pack(side=LEFT)
-    modeLabel = Label(keyshuffleFrame, text='Key Shuffle')
-    modeLabel.pack(side=LEFT)
-
     retroVar = IntVar()
-    retroCheckbutton = Checkbutton(checkBoxFrame, text="Retro mode", variable=retroVar)
-
+    retroCheckbutton = Checkbutton(checkBoxFrame, text="Retro mode (universal keys)", variable=retroVar)
     shuffleGanonVar = IntVar()
-    shuffleGanonVar.set(1)  # set default
-    shuffleGanonCheckbutton = Checkbutton(checkBoxFrame, text="Include Ganon's Tower and Pyramid Hole in shuffle pool",
-                                          variable=shuffleGanonVar)
+    shuffleGanonVar.set(1) #set default
+    shuffleGanonCheckbutton = Checkbutton(checkBoxFrame, text="Include Ganon's Tower and Pyramid Hole in shuffle pool", variable=shuffleGanonVar)
     hintsVar = IntVar()
-    hintsVar.set(1)  # set default
+    hintsVar.set(1) #set default
     hintsCheckbutton = Checkbutton(checkBoxFrame, text="Include Helpful Hints", variable=hintsVar)
     customVar = IntVar()
     customCheckbutton = Checkbutton(checkBoxFrame, text="Use custom item pool", variable=customVar)
     balancingVar = IntVar()
-    balancingVar.set(1)  # set default
+    balancingVar.set(1) #set default
     balancingCheckbutton = Checkbutton(checkBoxFrame, text="Multiworld Progression Balancing", variable=balancingVar)
-    patchesVar = IntVar()
-    patchesVar.set(1)  # set default
-    patchesCheckbutton = Checkbutton(checkBoxFrame, text="Create Delta Patches", variable=patchesVar)
     createSpoilerCheckbutton.pack(expand=True, anchor=W)
     suppressRomCheckbutton.pack(expand=True, anchor=W)
     openpyramidCheckbutton.pack(expand=True, anchor=W)
@@ -110,14 +95,13 @@ def guiMain(args=None):
     mcsbLabel.grid(row=0, column=0)
     mapshuffleCheckbutton.grid(row=0, column=1)
     compassshuffleCheckbutton.grid(row=0, column=2)
+    keyshuffleCheckbutton.grid(row=0, column=3)
     bigkeyshuffleCheckbutton.grid(row=0, column=4)
-    keyshuffleFrame.pack(expand=True, anchor=W)
     retroCheckbutton.pack(expand=True, anchor=W)
     shuffleGanonCheckbutton.pack(expand=True, anchor=W)
     hintsCheckbutton.pack(expand=True, anchor=W)
     customCheckbutton.pack(expand=True, anchor=W)
     balancingCheckbutton.pack(expand=True, anchor=W)
-    patchesCheckbutton.pack(expand=True, anchor=W)
 
     romOptionsFrame = LabelFrame(rightHalfFrame, text="Rom options")
     romOptionsFrame.columnconfigure(0, weight=1)
@@ -368,74 +352,62 @@ def guiMain(args=None):
 
 
     enemizerPathFrame = Frame(enemizerFrame)
-    enemizerPathFrame.grid(row=0, column=0, columnspan=4, sticky=W + E, padx=3)
+    enemizerPathFrame.grid(row=0, column=0, columnspan=3, sticky=W+E, padx=3)
     enemizerCLIlabel = Label(enemizerPathFrame, text="EnemizerCLI path: ")
     enemizerCLIlabel.pack(side=LEFT)
     enemizerCLIpathVar = StringVar(value="EnemizerCLI/EnemizerCLI.Core")
     enemizerCLIpathEntry = Entry(enemizerPathFrame, textvariable=enemizerCLIpathVar)
     enemizerCLIpathEntry.pack(side=LEFT, expand=True, fill=X)
-
     def EnemizerSelectPath():
         path = filedialog.askopenfilename(filetypes=[("EnemizerCLI executable", "*EnemizerCLI*")])
         if path:
             enemizerCLIpathVar.set(path)
-
     enemizerCLIbrowseButton = Button(enemizerPathFrame, text='...', command=EnemizerSelectPath)
     enemizerCLIbrowseButton.pack(side=LEFT)
 
+    potShuffleVar = IntVar()
+    potShuffleButton = Checkbutton(enemizerFrame, text="Pot shuffle", variable=potShuffleVar)
+    potShuffleButton.grid(row=0, column=3)
+
     enemizerEnemyFrame = Frame(enemizerFrame)
     enemizerEnemyFrame.grid(row=1, column=0, pady=5)
-
-    enemyShuffleVar = IntVar()
-    enemizerEnemyButton = Checkbutton(enemizerEnemyFrame, text="Enemy shuffle", variable=enemyShuffleVar)
-    enemizerEnemyButton.pack(side=LEFT)
+    enemizerEnemyLabel = Label(enemizerEnemyFrame, text='Enemy shuffle')
+    enemizerEnemyLabel.pack(side=LEFT)
+    enemyShuffleVar = StringVar()
+    enemyShuffleVar.set('none')
+    enemizerEnemyOption = OptionMenu(enemizerEnemyFrame, enemyShuffleVar, 'none', 'shuffled', 'chaos', 'chaosthieves')
+    enemizerEnemyOption.pack(side=LEFT)
 
     enemizerBossFrame = Frame(enemizerFrame)
     enemizerBossFrame.grid(row=1, column=1)
+    enemizerBossLabel = Label(enemizerBossFrame, text='Boss shuffle')
+    enemizerBossLabel.pack(side=LEFT)
     enemizerBossVar = StringVar()
     enemizerBossVar.set('none')
     enemizerBossOption = OptionMenu(enemizerBossFrame, enemizerBossVar, 'none', 'basic', 'normal', 'chaos',
                                     "singularity")
     enemizerBossOption.pack(side=LEFT)
-    enemizerBossLabel = Label(enemizerBossFrame, text='Boss shuffle')
-    enemizerBossLabel.pack(side=LEFT)
 
     enemizerDamageFrame = Frame(enemizerFrame)
     enemizerDamageFrame.grid(row=1, column=2)
+    enemizerDamageLabel = Label(enemizerDamageFrame, text='Enemy damage')
+    enemizerDamageLabel.pack(side=LEFT)
     enemizerDamageVar = StringVar()
     enemizerDamageVar.set('default')
     enemizerDamageOption = OptionMenu(enemizerDamageFrame, enemizerDamageVar, 'default', 'shuffled', 'chaos')
     enemizerDamageOption.pack(side=LEFT)
-    enemizerDamageLabel = Label(enemizerDamageFrame, text='Enemy damage')
-    enemizerDamageLabel.pack(side=LEFT)
 
     enemizerHealthFrame = Frame(enemizerFrame)
     enemizerHealthFrame.grid(row=1, column=3)
-    enemizerHealthVar = StringVar()
-    enemizerHealthVar.set('default')
-    enemizerHealthOption = OptionMenu(enemizerHealthFrame, enemizerHealthVar, 'default', 'easy', 'normal', 'hard',
-                                      'expert')
-    enemizerHealthOption.pack(side=LEFT)
     enemizerHealthLabel = Label(enemizerHealthFrame, text='Enemy health')
     enemizerHealthLabel.pack(side=LEFT)
-
-    potShuffleVar = IntVar()
-    potShuffleButton = Checkbutton(enemizerFrame, text="Pot shuffle", variable=potShuffleVar)
-    potShuffleButton.grid(row=2, column=0, sticky=W)
-
-    tileShuffleVar = IntVar()
-    tileShuffleButton = Checkbutton(enemizerFrame, text="Tile shuffle", variable=tileShuffleVar)
-    tileShuffleButton.grid(row=2, column=1, sticky=W)
-
-    bushShuffleVar = IntVar()
-    bushShuffleButton = Checkbutton(enemizerFrame, text="Bush shuffle", variable=bushShuffleVar)
-    bushShuffleButton.grid(row=2, column=2, sticky=W)
-
-    killableThievesVar = IntVar()
-    killable_thievesShuffleButton = Checkbutton(enemizerFrame, text="Killable Thieves", variable=killableThievesVar)
-    killable_thievesShuffleButton.grid(row=2, column=3, sticky=W)
+    enemizerHealthVar = StringVar()
+    enemizerHealthVar.set('default')
+    enemizerHealthOption = OptionMenu(enemizerHealthFrame, enemizerHealthVar, 'default', 'easy', 'normal', 'hard', 'expert')
+    enemizerHealthOption.pack(side=LEFT)
 
     multiworldframe = LabelFrame(randomizerWindow, text="Multiworld", padx=5, pady=2)
+
 
     worldLabel = Label(multiworldframe, text='Worlds')
     worldVar = StringVar()
@@ -487,7 +459,7 @@ def guiMain(args=None):
         guiargs.openpyramid = bool(openpyramidVar.get())
         guiargs.mapshuffle = bool(mapshuffleVar.get())
         guiargs.compassshuffle = bool(compassshuffleVar.get())
-        guiargs.keyshuffle = {"on": True, "universal": "universal", "off": False}[keyshuffleVar.get()]
+        guiargs.keyshuffle = bool(keyshuffleVar.get())
         guiargs.bigkeyshuffle = bool(bigkeyshuffleVar.get())
         guiargs.retro = bool(retroVar.get())
         guiargs.quickswap = bool(quickSwapVar.get())
@@ -498,10 +470,7 @@ def guiMain(args=None):
         guiargs.hints = bool(hintsVar.get())
         guiargs.enemizercli = enemizerCLIpathVar.get()
         guiargs.shufflebosses = enemizerBossVar.get()
-        guiargs.enemy_shuffle = enemyShuffleVar.get()
-        guiargs.bush_shuffle = bushShuffleVar.get()
-        guiargs.tile_shuffle = tileShuffleVar.get()
-        guiargs.killable_thieves = killableThievesVar.get()
+        guiargs.shuffleenemies = enemyShuffleVar.get()
         guiargs.enemy_health = enemizerHealthVar.get()
         guiargs.enemy_damage = enemizerDamageVar.get()
         guiargs.shufflepots = bool(potShuffleVar.get())
@@ -534,7 +503,6 @@ def guiMain(args=None):
                                    int(bomb10Var.get()), int(triforceVar.get()),
                                    int(rupoorcostVar.get()), int(universalkeyVar.get())]
         guiargs.rom = romVar.get()
-        guiargs.create_diff = patchesVar.get()
         guiargs.sprite = sprite
         # get default values for missing parameters
         for k,v in vars(parse_arguments(['--multi', str(guiargs.multi)])).items():
